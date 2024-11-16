@@ -1,4 +1,5 @@
 import Barang from "../models/BarangModel.js";
+import { DateTime } from "luxon";
 
 export const createBarang = async (req, res) => {
   const { name, desc, qty } = req.body;
@@ -18,11 +19,20 @@ export const createBarang = async (req, res) => {
 
 export const getBarang = async (req, res) => {
   try {
-    const response = await Barang.findAll();
+    const response = await Barang.findAll({
+      attributes: ["id", "name", "desc", "qty", "createdAt"],
+    });
     if (response.length === 0)
       return res.status(404).json({ msg: "Barang tidak ditemukan!" });
 
-    res.status(200).json(response);
+    const formatted = response.map((e) => ({
+      ...e.dataValues,
+      createdAt: DateTime.fromJSDate(e.createdAt)
+        .setZone("Asia/Jakarta")
+        .toFormat("yyyy-MM-dd HH:mm:ss ZZ"),
+    }));
+
+    res.status(200).json(formatted);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
@@ -30,11 +40,21 @@ export const getBarang = async (req, res) => {
 
 export const getBarangById = async (req, res) => {
   try {
-    const response = await Barang.findOne({ where: { id: req.params.id } });
+    const response = await Barang.findOne({
+      where: { id: req.params.id },
+      attributes: ["id", "name", "desc", "qty", "createdAt"],
+    });
     if (!response)
       return res.status(404).json({ msg: "Barang tidak ditemukan!" });
 
-    res.status(200).json(response);
+    const formatted = {
+      ...response.dataValues,
+      createdAt: DateTime.fromJSDate(response.createdAt)
+        .setZone("Asia/Jakarta")
+        .toFormat("yyyy-MM-dd HH:mm:ss ZZ"),
+    };
+
+    res.status(200).json(formatted);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }

@@ -68,7 +68,7 @@ export const getReqBrgById = async (req, res) => {
           { model: Barang, attributes: ["name", "desc", "qty"] },
           { model: User, attributes: ["name", "email", "role"] },
         ],
-        attributes: ["id", "tgl_request", "user_id", "barang_id"],
+        attributes: ["id", "createdAt", "user_id", "barang_id"],
       });
     } else if (req.user.uRole === "user") {
       response = await ReqBarang.findOne({
@@ -77,13 +77,21 @@ export const getReqBrgById = async (req, res) => {
           { model: Barang, attributes: ["name", "desc", "qty"] },
           { model: User, attributes: ["name", "email", "role"] },
         ],
-        attributes: ["id", "tgl_request", "user_id", "barang_id"],
+        attributes: ["id", "createdAt", "user_id", "barang_id"],
       });
     }
+
     if (!response) return res.sendStatus(404);
-    res.status(200).json(response);
+
+    const formatted = {
+      ...response.dataValues,
+      createdAt: DateTime.fromJSDate(response.createdAt)
+        .setZone("Asia/Jakarta")
+        .toFormat("yyyy-MM-dd HH:mm:ss ZZ"),
+    };
+    res.status(200).json(formatted);
   } catch (error) {
-    res.status(400).json(response);
+    res.status(400).json({ msg: error.message });
   }
 };
 
@@ -107,6 +115,6 @@ export const deleteReqBrg = async (req, res) => {
       res.status(200).json({ msg: "Berhasil menghapus request!" });
     }
   } catch (error) {
-    res.status(400).json(response);
+    res.status(400).json({ msg: error.message });
   }
 };
