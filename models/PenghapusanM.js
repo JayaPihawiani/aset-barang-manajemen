@@ -10,7 +10,6 @@ const Penghapusan = db.define(
       unique: true,
       primaryKey: true,
     },
-    tgl_hapus: DataTypes.DATE,
   },
   { freezeTableName: true }
 );

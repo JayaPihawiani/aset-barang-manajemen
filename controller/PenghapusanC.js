@@ -1,12 +1,9 @@
 import Barang from "../models/BarangModel.js";
 import Penghapusan from "../models/PenghapusanM.js";
+import { DateTime } from "luxon";
 
 export const createPenghapusan = async (req, res) => {
-  const { tgl_hapus } = req.body;
-
   if (req.user.uRole !== "admin") return res.sendStatus(403);
-  if (!tgl_hapus)
-    return res.status(400).json({ msg: "Field tidak boleh kosong!" });
 
   try {
     const checkBrg = await Barang.findOne({ where: { id: req.params.id } });
@@ -23,11 +20,10 @@ export const createPenghapusan = async (req, res) => {
         .json({ msg: "Item ini sudah masuk dalam daftar penghapusan!" });
 
     const response = await Penghapusan.create({
-      tgl_hapus,
       barang_id: checkBrg.id,
     });
 
-    res.status(201).json(response);
+    res.status(201).json({ msg: "Berhasil memasukkan kedaftar penghapusan." });
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
@@ -37,12 +33,20 @@ export const getPenghapusan = async (req, res) => {
   try {
     const response = await Penghapusan.findAll({
       include: { model: Barang, attributes: ["name", "desc", "qty"] },
-      attributes: ["id", "tgl_hapus", "barang_id"],
+      attributes: ["id", "barang_id", "createdAt"],
     });
 
     if (response.length === 0)
       return res.status(404).json({ msg: "Data penghapusan tidak ditemukan!" });
-    res.status(200).json(response);
+
+    const formatted = response.map((e) => ({
+      ...e.dataValues,
+      createdAt: DateTime.fromJSDate(e.createdAt)
+        .setZone("Asia/Jakarta")
+        .toFormat("yyyy-MM-dd HH:mm:ss ZZ"),
+    }));
+
+    res.status(200).json(formatted);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
@@ -53,12 +57,20 @@ export const getPenghapusanById = async (req, res) => {
     const response = await Penghapusan.findOne({
       where: { id: req.params.id },
       include: { model: Barang, attributes: ["name", "desc", "qty"] },
-      attributes: ["id", "tgl_hapus", "barang_id"],
+      attributes: ["id", "barang_id", "createdAt"],
     });
 
     if (!response)
       return res.status(404).json({ msg: "Data Penghapusan tidak ditemukan!" });
-    res.status(200).json(response);
+
+    const formatted = {
+      ...response.dataValues,
+      createdAt: DateTime.fromJSDate(response.createdAt)
+        .setZone("Asia/Jakarta")
+        .toFormat("yyyy-MM-dd HH:mm:ss ZZ"),
+    };
+
+    res.status(200).json(formatted);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
