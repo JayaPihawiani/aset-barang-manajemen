@@ -39,7 +39,7 @@ app.use("/api/hapus", hapusRouter);
 app.use("/api/request", reqRouter);
 
 app.get("/", (req, res) => {
-  res.render("index", { title: "Contoh EJS" });
+  res.render("index", { title: "EJS" });
 });
 
 app.listen(port, () => console.log("Server running on port", port));
