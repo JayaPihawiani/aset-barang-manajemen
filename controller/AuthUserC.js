@@ -45,7 +45,7 @@ export const loginUser = async (req, res) => {
 
     res.status(200).json({ authToken });
   } catch (error) {
-    res.status(400).json({ msg: error.message });
+    res.status(400).json({ msg: error.message, stackTrace: error.stack });
   }
 };
 

@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.5.0",
     "mysql2": "^3.11.4",
+    "puppeteer": "^23.8.0",
     "sequelize": "^6.37.5"
   }
 }

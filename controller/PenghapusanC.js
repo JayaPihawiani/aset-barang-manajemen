@@ -19,7 +19,7 @@ export const createPenghapusan = async (req, res) => {
         .status(400)
         .json({ msg: "Item ini sudah masuk dalam daftar penghapusan!" });
 
-    const response = await Penghapusan.create({
+    await Penghapusan.create({
       barang_id: checkBrg.id,
     });
 

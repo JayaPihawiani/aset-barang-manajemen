@@ -3,13 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title %></title>
+    <link rel="stylesheet" href="<%=url%>/style/style.css" />
+    <title>Result</title>
   </head>
   <body>
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo, maxime nisi
-    amet delectus assumenda quam autem dicta, modi placeat neque natus! Iure ea
-    aliquam veritatis assumenda omnis ad sunt fugit dicta asperiores dolorum
-    nesciunt voluptate porro incidunt sapiente perspiciatis pariatur id, dolore
-    esse expedita quam magni cum placeat rem. Repudiandae.
+    <div>
+      <div class="logos">
+        <img src="<%=url%>/img/logo.jpg" alt="logo" width="70px" />
+        <p style="padding-left: 15px; text-align: center">
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto,
+          dolore! Maxime fugiat libero tempora doloremque. Fugiat eligendi eos
+          nobis quia aperiam dolor tenetur nisi unde rerum amet quae enim,
+          nostrum deserunt eveniet numquam odit sint alias itaque voluptas!
+          Magni, ipsa!
+        </p>
+      </div>
+
+      <hr style="border: 1px solid" />
+      <div style="padding-top: 5px">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 8%">No.</th>
+              <th>Nama</th>
+              <th>Keterangan</th>
+              <th>Jumlah</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% brg.map((e, index)=> {%>
+            <tr>
+              <td><%= index+1 %></td>
+              <td><%=e.name%></td>
+              <td><%=e.desc%></td>
+              <td><%=e.qty%></td>
+            </tr>
+            <%}) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </body>
 </html>
