@@ -10,12 +10,21 @@ td {
   border: 1px solid black;
   border-collapse: collapse;
 }
+
 table {
   width: 100%;
 }
+
 th {
   padding-block: 12px;
 }
+
 td {
   padding: 8px 10px;
+}
+
+.table-caption {
+  text-align: left;
+  margin-bottom: 8px;
+  font-weight: bold;
 }

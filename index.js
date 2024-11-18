@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import db from "./config/Database.js";
+import { DateTime } from "luxon";
 // import { fileURLToPath } from "url";
 // import path, { dirname } from "path";
 // ---> router <---
@@ -49,8 +50,14 @@ app.use("/api/request", reqRouter);
 app.use("/api/pdf", pdfRouter);
 
 app.get("/", async (req, res) => {
-  const brg = await Barang.findAll();
-  res.render("index", { brg, url: process.env.SERVER });
+  const brgAll = await Barang.findAll({ order: [["createdAt", "DESC"]] });
+  const formatted = brgAll.map((e) => ({
+    ...e.dataValues,
+    createdAt: DateTime.fromJSDate(e.createdAt)
+      .setZone("Asia/Jakarta")
+      .toFormat("yyyy-MM-dd HH:mm:ss ZZ"),
+  }));
+  res.render("index", { brg: formatted, url: process.env.SERVER });
 });
 
 app.listen(port, () => console.log("Server running on port", port));
